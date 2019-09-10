@@ -4,9 +4,10 @@ from pyrob.api import *
 
 
 @task
-def task_5_7():
-    while (wall_is_beneath()) or (wall_is_above()):
-        move_right()
+def task_1_1():
+    move_right(n=2)
+    move_down(n=1)
+    
 
 
 if __name__ == '__main__':
