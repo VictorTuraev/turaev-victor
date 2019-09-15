@@ -5,7 +5,7 @@ from pyrob.api import *
 
 @task
 def task_1_2():
-    pass
+    
     move_down(n=2)
     move_right(n=2)
     fill_cell()
