@@ -63,7 +63,7 @@ def new_ball():
 		
 
 def click(event):
-	global k, x1, x2, x3, y1, y2, y3, r, k
+	global k, x1, x2, x3, y1, y2, y3, r, c1, c2, c3, dx1, dx2, dx3, dy1, dy2, dy3
 	global u
 	click_x=event.x
 	click_y=event.y
@@ -72,10 +72,40 @@ def click(event):
 	ro3 = (click_x-x3)**2+(click_y-y3)**2
 	ro = min(ro1, ro2, ro3)
 	if ro<=r**2 and u==False:
-		u=True
 		print('click')
 		k=k+1
 		l['text']=str(k)
+		
+
+		if ro==ro1:
+			canv.delete(c1)
+			x1 = rnd(100,700)
+			y1= rnd(100,500)
+			dx1 = rnd(-3,3)
+			dy1 = rnd(-3,3)
+			c1 = canv.create_oval(x1-r,y1-r,x1+r,y1+r,fill = choice(colors), width=0)
+			u=False
+		
+		if ro==ro2:
+			canv.delete(c2)
+			x2 = rnd(100,700)
+			y2 = rnd(100,500)
+			dx2 = rnd(-3,3)
+			dy2 = rnd(-3,3)
+			c2 = canv.create_oval(x2-r,y2-r,x2+r,y2+r,fill = choice(colors), width=0)
+			u=False
+
+		if ro==ro3:
+			canv.delete(c3)
+			x3 = rnd(100,700)
+			y3 = rnd(100,500)
+			dx3 = rnd(-3,3)
+			dy3 = rnd(-3,3)
+			c3 = canv.create_oval(x3-r,y3-r,x3+r,y3+r,fill = choice(colors), width=0)
+			u=False
+
+
+			
 	
 	
 
