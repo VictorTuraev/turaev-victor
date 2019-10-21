@@ -38,13 +38,13 @@ def new_ball():
 	y1=y1+dy1
 	y2=y2+dy2
 	y3=y3+dy3
-	canv.move(c1, dx1, dy2)
+	canv.move(c1, dx1, dy1)
 	canv.move(c2, dx2, dy2)
 	canv.move(c3, dx3, dy3)
 	if ((800-r<=x1) or(r>=x1)):
 		dx1=-dx1
 	
-	if ((800-r<=x2) or(r<=x2)):
+	if ((800-r<=x2) or(r>=x2)):
 		dx2=-dx2
 	
 	if ((800-r<=x3) or(r>=x3)):
