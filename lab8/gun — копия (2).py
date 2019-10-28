@@ -57,6 +57,7 @@ class ball():
         и стен по краям окна (размер окна 800х600).
         """
         # FIXME
+        target2.mv()
         self.vy=self.vy-g
         self.x += self.vx
         self.y -= self.vy
@@ -159,21 +160,19 @@ class target():
 class target2():
     global dx2, dy2, x2, y2, r2
     def __init__ (self):
-        self.id = canv.create_oval(0,0,0,0)
+        
         self.points = 0
         self.live = 1
     # FIXME: don't work!!! How to call this functions when object is created?
-        
-
+        self.id = canv.create_oval(0,0,0,0)
         self.id_points = canv.create_text(30,30,text = self.points,font = '28')
         self.new_target2()
-        
 
     def new_target2(self):
         global x2, y2, r2 
         """ Инициализация новой цели. """
-        x2 = self.x = rnd(0, 600)
-        y2 = self.y = rnd(160, 400)
+        x2 = self.x = rnd(400, 600)
+        y2 = self.y = rnd(150, 400)
         r2 = self.r = rnd(2, 50)
         color = self.color = 'red'
         canv.coords(self.id, x2-r2, y2-r2, x2+r2, y2+r2)
@@ -184,19 +183,10 @@ class target2():
         canv.coords(self.id, -10, -10, -10, -10)
         self.points += points
         canv.itemconfig(self.id_points, text=self.points)
-    def mv(self):
+    def mv():
         global x2, y2, dx2, dy2
         x2 = x2+dx2
         y2 = y2+dy2
-        canv.delete(self, self.id)
-        self.id = canv.create_oval(
-                self.x - self.r,
-                self.y - self.r,
-                self.x + self.r,
-                self.y + self.r,
-                fill=self.color)
-        
-
 
 
 t1 = target()
@@ -223,7 +213,6 @@ def new_game(event=''):
     t1.live = 1
     t2.live = 1
     while (t1.live and t2.live) or balls:
-        target2.mv()
         for i, b in enumerate(balls):
             b.move()
             if (b.hittest(t1) or b.hittest(t2)) and t1.live:
