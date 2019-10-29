@@ -11,8 +11,8 @@ root.geometry('800x600')
 canv = tk.Canvas(root, bg='white')
 canv.pack(fill=tk.BOTH, expand=1)
 
-dx2=15
-dy2=14
+dx2=rnd(-3, 3)
+dy2=rnd(-3, 3)
 g=0
 
 
@@ -57,7 +57,14 @@ class ball():
         и стен по краям окна (размер окна 800х600).
         """
         # FIXME
-        self.vy=self.vy-g
+        if self.x+self.vx>=780 or self.x+self.vx<=15:
+            self.vx = -self.vx*0.5
+        if self.y - self.vy >= 580 or self.y - self.vy <= 15:
+            print("i passed the wall")
+            self.vy = -self.vy*0.5
+        if abs(self.vy) <= 0.5:
+            self.vy = 0
+        self.vy = self.vy-g
         self.x += self.vx
         self.y -= self.vy
         self.set_coords()
@@ -170,7 +177,6 @@ class target2():
         
 
     def new_target2(self):
-        global x2, y2, r2 
         """ Инициализация новой цели. """
         x2 = self.x = rnd(0, 600)
         y2 = self.y = rnd(160, 400)
@@ -186,8 +192,12 @@ class target2():
         canv.itemconfig(self.id_points, text=self.points)
     def mv(self):
         global x2, y2, dx2, dy2
-        x2 = x2+dx2
-        y2 = y2+dy2
+        if self.x+dx2>=780 or self.x+dx2<=15:
+            dx2 = -dx2
+        if self.y+dy2>=580 or self.y+dy2<=15:
+            dy2 = -dy2
+        self.x = self.x+dx2
+        self.y = self.y+dy2
         canv.delete(self, self.id)
         self.id = canv.create_oval(
                 self.x - self.r,
@@ -223,12 +233,14 @@ def new_game(event=''):
     t1.live = 1
     t2.live = 1
     while (t1.live and t2.live) or balls:
-        target2.mv()
+        t2.mv()
         for i, b in enumerate(balls):
             b.move()
-            if (b.hittest(t1) or b.hittest(t2)) and t1.live:
+            if (b.hittest(t1) or b.hittest(t2)) and t1.live and t2.live:
                 t1.live = 0
+                t2.live = 0
                 t1.hit()
+                t2.hit()
                 canv.bind('<Button-1>', "")
                 canv.bind('<ButtonRelease-1>', '')
                 canv.itemconfig(screen1, text='Вы уничтожили цели за ' + str(bullet) + ' выстрелов')
