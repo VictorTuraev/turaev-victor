@@ -11,11 +11,13 @@ root.geometry('800x600')
 canv = tk.Canvas(root, bg='white')
 canv.pack(fill=tk.BOTH, expand=1)
 
-g=3
+dx2=rnd(-3, 3)
+dy2=rnd(-3, 3)
+g=5
 
 
 class ball():
-    global t2, t1
+    global t2, x2, y2, dx2, dy2
     def __init__(self, x=40, y=450):
         """ Конструктор класса ball
 
@@ -55,18 +57,14 @@ class ball():
         и стен по краям окна (размер окна 800х600).
         """
         # FIXME
-        
-        
         if self.x+self.vx>=780 or self.x+self.vx<=15:
             self.vx = -self.vx*0.5
         if self.y - self.vy >= 580 or self.y - self.vy <= 15:
             print("i passed the wall")
             self.vy = -self.vy*0.5
-        else:
-            self.vy = self.vy-g
-        if abs(self.vy) <= 1:
+        if abs(self.vy) <= 0.5:
             self.vy = 0
-            self.live = 0
+        self.vy = self.vy-g
         self.x += self.vx
         self.y -= self.vy
         self.set_coords()
@@ -148,8 +146,6 @@ class target():
         self.id = canv.create_oval(0,0,0,0)
         self.id_points = canv.create_text(30,30,text = self.points,font = '28')
         self.new_target()
-        self.dx=rnd(-3, 3)
-        self.dy=rnd(-3, 3)
 
     def new_target(self):
         """ Инициализация новой цели. """
@@ -165,13 +161,43 @@ class target():
         canv.coords(self.id, -10, -10, -10, -10)
         self.points += points
         canv.itemconfig(self.id_points, text=self.points)
+        
+        
+class target2():
+    global dx2, dy2, x2, y2, r2
+    def __init__ (self):
+        self.id = canv.create_oval(0,0,0,0)
+        self.points = 0
+        self.live = 1
+    # FIXME: don't work!!! How to call this functions when object is created?
+        
+
+        self.id_points = canv.create_text(30,30,text = self.points,font = '28')
+        self.new_target2()
+        
+
+    def new_target2(self):
+        """ Инициализация новой цели. """
+        x2 = self.x = rnd(0, 600)
+        y2 = self.y = rnd(160, 400)
+        r2 = self.r = rnd(2, 50)
+        color = self.color = 'red'
+        canv.coords(self.id, x2-r2, y2-r2, x2+r2, y2+r2)
+        canv.itemconfig(self.id, fill=color)
+
+    def hit(self, points=1):
+        """Попадание шарика в цель."""
+        canv.coords(self.id, -10, -10, -10, -10)
+        self.points += points
+        canv.itemconfig(self.id_points, text=self.points)
     def mv(self):
-        if self.x+self.dx>=780 or self.x+self.dx<=15:
-            self.dx = -self.dx
-        if self.y+self.dy>=580 or self.y+self.dy<=15:
-            self.dy = -self.dy
-        self.x = self.x+self.dx
-        self.y = self.y+self.dy
+        global x2, y2, dx2, dy2
+        if self.x+dx2>=780 or self.x+dx2<=15:
+            dx2 = -dx2
+        if self.y+dy2>=580 or self.y+dy2<=15:
+            dy2 = -dy2
+        self.x = self.x+dx2
+        self.y = self.y+dy2
         canv.delete(self, self.id)
         self.id = canv.create_oval(
                 self.x - self.r,
@@ -179,9 +205,12 @@ class target():
                 self.x + self.r,
                 self.y + self.r,
                 fill=self.color)
+        
+
+
 
 t1 = target()
-t2 = target()
+t2 = target2()
 screen1 = canv.create_text(400, 300, text='', font='28')
 g1 = gun()
 bullet = 0
@@ -192,7 +221,7 @@ def new_game(event=''):
     global gun, t1, t2, screen1, balls, bullet
     canv.itemconfig(screen1, text='')
     t1.new_target()
-    t2.new_target()
+    t2.new_target2()
     
     bullet = 0
     balls = []
@@ -205,7 +234,6 @@ def new_game(event=''):
     t2.live = 1
     while (t1.live and t2.live) or balls:
         t2.mv()
-        t1.mv()
         for i, b in enumerate(balls):
             b.move()
             if (b.hittest(t1) or b.hittest(t2)) and t1.live and t2.live:
