@@ -36,7 +36,7 @@ class ball():
                 self.y + self.r,
                 fill=self.color
         )
-        self.live = 30
+        self.live = 180
 
     def set_coords(self):
         canv.coords(
@@ -64,9 +64,9 @@ class ball():
             self.vy = -self.vy*0.5
         else:
             self.vy = self.vy-g
-        if abs(self.vy) <= 1:
+        """"if abs(self.vy) <= 1:
             self.vy = 0
-            self.live = 0
+            self.live = 0"""
         self.x += self.vx
         self.y -= self.vy
         self.set_coords()
@@ -203,12 +203,14 @@ def new_game(event=''):
     z = 0.03
     t1.live = 1
     t2.live = 1
-    while (t1.live and t2.live) or balls:
+    while (t1.live>0 and t2.live>0) or balls:
         t2.mv()
         t1.mv()
         for i, b in enumerate(balls):
             b.move()
-            if (b.hittest(t1) or b.hittest(t2)) and t1.live and t2.live:
+            if b.live<=0:
+                canv.delete(b.id)
+            if (b.hittest(t1) or b.hittest(t2)) and t1.live>0 and t2.live>0:
                 t1.live = 0
                 t2.live = 0
                 t1.hit()
