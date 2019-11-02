@@ -165,7 +165,7 @@ class target():
         canv.coords(self.id, -10, -10, -10, -10)
         self.points += points
         canv.itemconfig(self.id_points, text=self.points)
-    def mv(self):
+    def mv(self, inst):
         if self.x+self.dx>=780 or self.x+self.dx<=15:
             self.dx = -self.dx
         if self.y+self.dy>=580 or self.y+self.dy<=15:
@@ -179,6 +179,9 @@ class target():
                 self.x + self.r,
                 self.y + self.r,
                 fill=self.color)
+        """"for i in inst:
+            if i != self:"""
+                
 
 t1 = target()
 t2 = target()
@@ -204,8 +207,8 @@ def new_game(event=''):
     t1.live = 1
     t2.live = 1
     while (t1.live>0 and t2.live>0) or balls:
-        t2.mv()
-        t1.mv()
+        t2.mv([t1, t2])
+        t1.mv([t1, t2])
         for i, b in enumerate(balls):
             b.move()
             if b.live<=0:
