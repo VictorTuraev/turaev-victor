@@ -58,10 +58,10 @@ class ball():
         
         
         if self.x+self.vx>=780 or self.x+self.vx<=15:
-            self.vx = -self.vx*0.5
+            self.vx = -self.vx*0.85
         if self.y - self.vy >= 580 or self.y - self.vy <= 15:
             print("i passed the wall")
-            self.vy = -self.vy*0.5
+            self.vy = -self.vy*0.85
         else:
             self.vy = self.vy-g
         """"if abs(self.vy) <= 1:
@@ -93,6 +93,7 @@ class gun():
         self.f2_on = 0
         self.an = 1
         self.id = canv.create_line(20,450,50,420,width=7) # FIXME: don't know how to set it...
+        self.y = 450
 
     def fire2_start(self, event):
         self.f2_on = 1
@@ -122,9 +123,9 @@ class gun():
             canv.itemconfig(self.id, fill='orange')
         else:
             canv.itemconfig(self.id, fill='black')
-        canv.coords(self.id, 20, 450,
+        canv.coords(self.id, 20, self.y,
                     20 + max(self.f2_power, 20) * math.cos(self.an),
-                    450 + max(self.f2_power, 20) * math.sin(self.an)
+                    self.y + max(self.f2_power, 20) * math.sin(self.an)
                     )
 
     def power_up(self):
@@ -134,10 +135,24 @@ class gun():
             canv.itemconfig(self.id, fill='orange')
         else:
             canv.itemconfig(self.id, fill='black')
-        canv.coords(self.id, 20, 450,
+        canv.coords(self.id, 20, self.y,
             20 + max(self.f2_power, 20) * math.cos(self.an),
-            450 + max(self.f2_power, 20) * math.sin(self.an)
+            self.y + max(self.f2_power, 20) * math.sin(self.an)
         )
+    def move_up(self, event):
+        if self.y > 150 :
+            self.y -=1
+            canv.coords(self.id, 20, self.y,
+                    20 + max(self.f2_power, 20) * math.cos(self.an),
+                    self.y + max(self.f2_power, 20) * math.sin(self.an)
+                    )
+    def move_down(self, event):
+        if self.y < 500 :
+            self.y +=1
+            canv.coords(self.id, 20, self.y,
+                    20 + max(self.f2_power, 20) * math.cos(self.an),
+                    self.y + max(self.f2_power, 20) * math.sin(self.an)
+                    )
 
 
 class target():
@@ -179,8 +194,14 @@ class target():
                 self.x + self.r,
                 self.y + self.r,
                 fill=self.color)
-        """"for i in inst:
-            if i != self:"""
+        for i in inst:
+            if i != self:
+                if (self.x-i.x)**2+(self.y-i.y)**2<=(self.r+i.r)**2:
+                    self.dx = -self.dx
+                    self.dy = -self.dy
+                    i.dx = -i.dx
+                    i.dy = -i.dy
+                    
                 
 
 t1 = target()
@@ -202,7 +223,8 @@ def new_game(event=''):
     canv.bind('<Button-1>', g1.fire2_start)
     canv.bind('<ButtonRelease-1>', g1.fire2_end)
     canv.bind('<Motion>', g1.targetting)
-
+    root.bind('<Up>', g1.move_up)
+    root.bind('<Down>', g1.move_down)
     z = 0.03
     t1.live = 1
     t2.live = 1
