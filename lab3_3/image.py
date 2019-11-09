@@ -5,9 +5,9 @@ dt = 10
 a = 0
 v = 0.05
 r = 20
-l = 200
+L = 200
 x = 250
-y = 10+l*math.cos(a)
+y = 10+L*math.cos(a)
 nit = gr.Line(gr.Point(250, 10), gr.Point(x, y))
 nit.draw(win)
 circle = gr.Circle(gr.Point(x, y), r)
@@ -23,10 +23,10 @@ def change():
 
 
 def mv():
-    global nit, circle, x, y, l
+    global nit, circle, x, y, L
     a = change()
-    x = l*math.sin(a)+250
-    y = l*math.cos(a)+10
+    x = L*math.sin(a)+250
+    y = L*math.cos(a)+10
     nit.undraw()
     circle.undraw()
     circle.move(x, y)
